@@ -7,6 +7,8 @@ library(jsonlite)
 library(countrycode)
 library(maps)
 library(bslib)
+library(rsconnect)
+
 
 # Load data
 data <- fromJSON("data_cia2.json")
@@ -47,7 +49,7 @@ ui <- fluidPage(
                                "Electricity from Fossil Fuels" = "electricity_fossil_fuel",
                                "Life Expectancy" = "life_expectancy"
                              ),
-                             width = "100%"),  # ✅ Makes dropdown responsive
+                             width = "100%"),  
                  
                  actionButton("show_data", "View Raw Data"),
                  br(), br(),
@@ -117,12 +119,12 @@ ui <- fluidPage(
 # --- Define Server ---
 server <- function(input, output, session) {
   
-  # 1. Store the selected variable (like "net_migr_rate") reactively
+  # Store the selected variable (like "net_migr_rate") reactively
   selected_var <- reactive({
     input$selected_var
   })
   
-  # User-friendly variable labels
+  # variable labels
   var_labels <- c(
     expenditure = "Education Expenditure",
     youth_unempl_rate = "Youth Unemployment Rate",
@@ -132,7 +134,7 @@ server <- function(input, output, session) {
     life_expectancy = "Life Expectancy"
   )
   
-  # 2. Render the interactive map
+  # Render the interactive map
   output$map_plot <- renderPlotly({
     var <- selected_var()  # Get the selected column name
     
@@ -153,7 +155,7 @@ server <- function(input, output, session) {
     ggplotly(p, tooltip = "text")
   })
   
-  # Render raw table (always visible, max 15 rows)
+  # Render raw table 
   output$raw_table <- renderDT({
     var <- selected_var()
     
