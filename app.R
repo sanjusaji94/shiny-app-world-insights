@@ -63,6 +63,39 @@ ui <- fluidPage(
 
 # --- Define Server ---
 server <- function(input, output, session) {
+  
+  # 1. Store the selected variable (like "net_migr_rate") reactively
+  selected_var <- reactive({
+    input$selected_var
+  })
+  
+  # User-friendly variable labels
+  var_labels <- c(
+    expenditure = "Education Expenditure",
+    youth_unempl_rate = "Youth Unemployment Rate",
+    net_migr_rate = "Net Migration Rate",
+    pop_growth_rate = "Population Growth Rate",
+    electricity_fossil_fuel = "Electricity from Fossil Fuels",
+    life_expectancy = "Life Expectancy"
+  )
+  
+  # 2. Render the interactive map
+  output$map_plot <- renderPlotly({
+    var <- selected_var()  # Get the selected column name
+    
+    # Basic ggplot map using that variable
+    p <- ggplot(data_map, aes(x = long, y = lat, group = group,
+                              fill = .data[[var]], text = paste0(region, ": ", .data[[var]]))) +
+      geom_polygon(color = "white") +
+      scale_fill_viridis_c(option = "C", na.value = "gray80") +
+      labs(
+        title = paste("Map of", var_labels[[var]]),
+        fill = var_labels[[var]]
+      ) +
+      theme_void()
+    
+    ggplotly(p, tooltip = "text")
+  })
 }
 
 # --- Run the App ---
