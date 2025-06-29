@@ -1,0 +1,10 @@
+name: case_study_four
+title:
+username: sanjusaji
+account: sanjusaji
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15009623
+bundleId: 10539214
+url: https://sanjusaji.shinyapps.io/case_study_four/
+version: 1
